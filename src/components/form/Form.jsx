@@ -1,33 +1,39 @@
-import React, {useState} from 'react'
+import React, {useRef} from 'react'
+import emailjs from '@emailjs/browser'
 import './form.css'
 
-const Form = () => {
-
-    const [enteredName,setEnteredName]= useState('')
-    const [enteredEmail,setEnteredEmail]= useState('')
-    const [enteredMessage,setEnteredMessage]= useState('')
 
 
-    const submitHandler =(e)=>{
-        e.preventDefault()
 
-        console.log('submitted');
-    }
+
+export const Form = () => {
+    const form = useRef();
+  
+    const sendEmail = (e) => {
+      e.preventDefault();
+  
+      emailjs.sendForm('service_f1oc3vs', 'template_hhagvih', form.current, 'KHLhvPpupwWd-lHWk')
+        .then((result) => {
+            console.log(result.text);
+        }, (error) => {
+            console.log(error.text);
+        });
+    };
 
   return (
-    <form className='form' onSubmit={submitHandler}>
+    <form  ref={form} onSubmit={sendEmail} className='form' >
     <div className="form_input">
-        <input type="text" placeholder='Your Name' value={enteredName} onChange={e=> setEnteredName(e.target.value)}/>
+        <input type="text" placeholder='Your Name' name='user_name'/>
     </div>
     <div className="form_input">
-        <input type="email" placeholder='Your Email' value={enteredEmail} onChange={e=> setEnteredEmail(e.target.value)}/>
-    </div>
-
-    <div className="form_input">
-        <textarea rows="10" placeholder='Write Message' value={enteredMessage} onChange={e=> setEnteredMessage(e.target.value)}></textarea>
+        <input type="email" placeholder='Your Email' name='user_email'/>
     </div>
 
-    <button className='submit_btn' type='submit'>
+    <div className="form_input">
+        <textarea rows="10" placeholder='Write Message' name='message'></textarea>
+    </div>
+
+    <button className='submit_btn' type='submit' value="Send">
             Submit
         </button>
 </form>
